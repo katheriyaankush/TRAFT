@@ -1,0 +1,27 @@
+{
+  "no-unnamed-features": "on",
+  "allowed-tags": ["off", {"tags": ["@watch", "@wip", "@regression", "@smoke", "@manual", "@todo"], "patterns": ["^@todo$"]}],
+  "file-name": ["on", {"style": "camelCase"}],
+  "indentation" : [
+    "on", {
+      "Feature": 0,
+      "Background": 4,
+      "Scenario": 4,
+      "Step": 8,
+      "Examples": 8,
+      "example": 12,
+      "given": 8,
+      "when": 8,
+      "then": 8,
+      "and": 8,
+      "but": 8,
+      "feature tag": 0,
+      "scenario tag": 4
+    }
+  ],
+  "max-scenarios-per-file": ["off", {"maxScenarios": 15, "countOutlineExamples": false}],
+  "new-line-at-eof": ["on", "yes"],
+  "no-dupe-scenario-names": ["off", "anywhere"],
+  "scenario-size": ["on", { "steps-length": { "Background": 5, "Scenario": 15 }}],
+  "no-scenario-outlines-without-examples": "on"
+}

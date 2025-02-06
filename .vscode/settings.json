@@ -1,0 +1,40 @@
+{
+    "cucumberautocomplete.syncfeatures": "./features/**/*.feature",
+    "cucumberautocomplete.steps": [
+        "./*/support/step-definitions/*.ts",
+        "./*/support/step-definitions/*/*.ts"
+    ],
+    "cucumberautocomplete.strictGherkinCompletion": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.tabCompletion": "on",
+      "editor.formatOnPaste": true,
+      "editor.formatOnSave": true,
+      "editor.minimap.enabled": true,
+      "editor.minimap.showSlider": "always",
+      "editor.minimap.renderCharacters": true,
+      "editor.mouseWheelZoom": true,
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "cSpell.words": [
+        "fethr",
+        "lintrc",
+        "msedge",
+        "pixelmatch",
+        "pngjs",
+        "posttest",
+        "Tredence"
+    ],
+    "[feature]": {
+        "editor.defaultFormatter": "alexkrechik.cucumberautocomplete"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    }
+}

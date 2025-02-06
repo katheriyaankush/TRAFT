@@ -1,0 +1,149 @@
+
+trigger: none
+
+pool:
+  vmImage: windows-latest
+
+  branches:
+    include:
+      - main
+
+schedules:
+- cron: "0 5 * * 1-5"
+  displayName: Nightly build
+  branches:
+    include:
+    - main
+  always: true
+
+jobs:
+- job: Test
+  timeoutInMinutes: 0
+
+  steps:
+  - task: NodeTool@0
+    env:
+      TAGS: $(tags)
+      RETRY: $(num_of_retry)
+      BASE_URL: $(base_url)
+
+    inputs:
+      versionSpec: '16.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+    displayName: 'Installing Packages'
+
+  - script: |
+      npm run test
+      continueOnError: true
+    displayName: 'Running Tests on MS Edge'
+
+  - script: |
+      npm run report
+    displayName: 'Generate Report'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: './test-results/reports/'
+      ArtifactName: 'CucumberReport'
+      publishLocation: 'Container'
+    continueOnError: true
+    displayName: 'Export Test Report'
+    condition: always()
+
+  - task: PublishCucumberReport@1
+    inputs:
+      jsonDir: './test-results/reports/'
+      outputPath: './test-results/reports/'
+      theme: 'hierarchy'
+      reportSuiteAsScenarios: false
+      name: 'Test Report'
+      title: 'SAP Accelerator'
+    continueOnError: true
+    condition: always()
+
+
+  - task: SendEmail@1
+    inputs:
+      To: 'balaji.makam@tredence.com'
+      From: 'atom.support@tredence.com'
+      Subject: 'SAP Accelerator Test Results'
+      Body: '<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Test Results for SAP Accelerator Application</title>
+    <style>
+      /* CSS styles go here */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #333333;
+      }
+
+      .report {
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .section {
+        margin-bottom: 20px;
+      }
+
+      .section h2 {
+        color: #444444;
+        margin-top: 0;
+      }
+
+      .section p {
+        color: #666666;
+      }
+
+      .section table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .section th, .section td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #dddddd;
+      }
+
+      .section th {
+        background-color: #f2f2f2;
+        color: #333333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="report">
+      <h1>Automation Test Results for SAP Accelerator Application</h1>
+
+      <div class="section">
+        <h2>Summary</h2>
+        <p>For more details please click on this <a href="https://dev.azure.com/Studio-Org/GEN.AI/_build?definitionId=1334&_a=summary">link</a> for the SAP Accelerator application test results .</p>
+        <!-- Add your content here -->
+      </div>
+    </div>
+  </body>
+  </html>'
+      BodyAsHtml: true
+      AddAttachment: true
+      Attachment: 'D:\a\1\s\test-results\reports\cucumber.html'
+      SmtpServer: 'smtp-mail.outlook.com'
+      SmtpUsername: $(smtp_username)
+      SmtpPassword: $(smtp_password)
+    continueOnError: true
+    condition: always()
